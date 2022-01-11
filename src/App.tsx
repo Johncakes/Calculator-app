@@ -7,8 +7,6 @@ import { Calc } from './calc';
 export default function App(){
   const [totalValue, setTotalValue] = useState(0);
   const [display , setDisplay] = useState('0');
-  const [clickedNumber, setClickedNumber] = useState('');
-  const [clickedOperator, setClickedOperator] = useState('');
   const [clickedButton, setClickedButton] = useState('');
 
   Calc(clickedButton,totalValue,display, setTotalValue, setDisplay, setClickedButton);

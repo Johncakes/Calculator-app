@@ -6,11 +6,13 @@ export function Calc(clickedButton:string,totalValue:number,display:string,setTo
   const operatorList:string[] = ['+','-','*','/','%',]
   const bracket:string[] = ['(',')','()']
 
+  let hasBracketOpened = false;
+  let bracketAmount = 0;
   function newNum(val:number){
     numberList.push(val);
     setTotalValue(0);
   }
-  console.log('display = ', display)
+  // console.log('display = ', display)
   if(clickedButton)
   {
     if(operatorList.includes(display[display.length-1]) && operatorList.includes(clickedButton)){
@@ -29,19 +31,21 @@ export function Calc(clickedButton:string,totalValue:number,display:string,setTo
           setClickedButton('')
           break;
         case '()':
-          let hasBracketOpened = false;
-          let bracketAmount = 0;
+          bracketAmount += 1;
           for(let i =0; i < display.length; i++){
             if(display[i] == '('){
-              console.log('has bracket')
               bracketAmount += 1;
+              console.log('bracketAmount = ', bracketAmount);
               hasBracketOpened = true;
             }
-            else if(operatorList.includes(display[i])){
+            else if(display[i] == ')'){
               console.log('no brackets opened')
+              bracketAmount -= 1;
               hasBracketOpened = false;
             }
           }
+          console.log('for loop finished');
+          console.log('bracketAmount = ', bracketAmount);
           if (hasBracketOpened === false){
             if(operatorList.includes(display[display.length-1])){
               setDisplay(display.concat('('))
@@ -77,7 +81,7 @@ export function Calc(clickedButton:string,totalValue:number,display:string,setTo
           else{
             let hasDecimal = false;
             for(let i =0; i < display.length; i++){
-              if(display[i] == '.'){
+              if(display[i] === '.'){
                 console.log('has decimal')
                 hasDecimal = true;
               }
@@ -107,10 +111,10 @@ export function Calc(clickedButton:string,totalValue:number,display:string,setTo
           }
           break;
         default:
-          if(display =='0' && operatorList.includes(clickedButton)){
+          if(display ==='0' && operatorList.includes(clickedButton)){
             setClickedButton('')
           }
-          else if(display == '0' && clickedButton != '.'){
+          else if(display === '0' && clickedButton !== '.'){
             setDisplay(clickedButton)
             setClickedButton('')
           }
