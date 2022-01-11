@@ -78,15 +78,15 @@ export function TopFunctions(
       </button>
       <button 
         className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-        onClick={() => props.setClickedButton('()')}
+        onClick={() => props.setClickedButton('ce')}
       >
-        ( )
+        CE
       </button>
       <button 
         className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-        onClick={() => props.setClickedButton('%')}
+        onClick={() => props.setClickedButton('()')}
       >
-        %
+        ( )
       </button>
     </div>
   )

@@ -5,11 +5,11 @@ import { Numbers, TopFunctions, SideFunctions } from './button';
 import { Calc } from './calc';
 
 export default function App(){
-  const [totalValue, setTotalValue] = useState(0);
+  const [bracketAmount, setBracketAmount] = useState(0);
   const [display , setDisplay] = useState('0');
   const [clickedButton, setClickedButton] = useState('');
 
-  Calc(clickedButton,totalValue,display, setTotalValue, setDisplay, setClickedButton);
+  Calc(bracketAmount,clickedButton,display,setBracketAmount, setDisplay, setClickedButton);
   return(
     <>
       <div className='flex justify-center items-center w-full h-screen'>

@@ -1,133 +1,139 @@
-import React from "react";
-
-export function Calc(clickedButton:string,totalValue:number,display:string,setTotalValue:any, setDisplay:any, setClickedButton:any)
+export function Calc(bracketAmount:number,clickedButton:string, display:string, setBracketAmount:any ,setDisplay:any, setClickedButton:any)
 {
-  let numberList:number[] = []
   const operatorList:string[] = ['+','-','*','/','%',]
   const bracket:string[] = ['(',')','()']
-
   let hasBracketOpened = false;
-  let bracketAmount = 0;
-  function newNum(val:number){
-    numberList.push(val);
-    setTotalValue(0);
-  }
+  let tempBracketAmount = bracketAmount;
+
   // console.log('display = ', display)
   if(clickedButton)
   {
+    // Not oper X oper
     if(operatorList.includes(display[display.length-1]) && operatorList.includes(clickedButton)){
-      setClickedButton('')
+      console.log('op = ', display[display.length-1], ' op2 = ', clickedButton)
     }
     else{
       switch(clickedButton){
         case '-1':
-          setClickedButton('')
           const neg = +(display) * -1 
           setDisplay(neg.toString())
+          break;
+        case 'ce':
+          setDisplay(display.slice(0,display.length-1))
           break;
         case 'clear':
           console.log('clear')
           setDisplay('0')
-          setClickedButton('')
           break;
         case '()':
-          bracketAmount += 1;
+          console.log('after = bracketAmount = ', bracketAmount)
+          //Check if there is an opened bracket
+          tempBracketAmount = 0;
           for(let i =0; i < display.length; i++){
-            if(display[i] == '('){
-              bracketAmount += 1;
-              console.log('bracketAmount = ', bracketAmount);
-              hasBracketOpened = true;
+            if(display[i] === '('){
+              tempBracketAmount += 1;
+          console.log('TempBracketAmount = ', tempBracketAmount)
+              if (tempBracketAmount >= 1){
+                hasBracketOpened = true;
+              }
             }
-            else if(display[i] == ')'){
-              console.log('no brackets opened')
-              bracketAmount -= 1;
-              hasBracketOpened = false;
+            else if(display[i] === ')'){
+              tempBracketAmount -= 1;
+              if(tempBracketAmount <= 0){
+                hasBracketOpened = false;
+              }
             }
           }
-          console.log('for loop finished');
-          console.log('bracketAmount = ', bracketAmount);
+          // console.log('TempBracketAmount = ', tempBracketAmount)
           if (hasBracketOpened === false){
+            // console.log('No brackets');
+            //If there is a operator before this
             if(operatorList.includes(display[display.length-1])){
               setDisplay(display.concat('('))
             }
+            //If there is a number/bracket before this
             else{
               setDisplay(display.concat('*('))
             }
           }
-          else{ //Has bracket open
-            //
-            if(display[display.length-1] === '('){
-              bracketAmount += 1;
+          else{
+            // console.log('Brackets Opened');
+            //If there is a bracket before this
+            if(display[display.length-1] === '(' || operatorList.includes(display[display.length-1])){
               setDisplay(display.concat('('))
             }
             else{
-              bracketAmount -= 1;
+              tempBracketAmount -= 1;
               setDisplay(display.concat(')'))
-              if (bracketAmount <= 0)
-              {
+              if (bracketAmount <= 0){
                 console.log('bracket is all closed')
                 hasBracketOpened = false;
               }
             }
           }
-          setClickedButton('')
-
           break;
         case '.':
           if(display.length<= 1){
             setDisplay(display.concat(clickedButton))
-            setClickedButton('')
           }
           else{
             let hasDecimal = false;
             for(let i =0; i < display.length; i++){
               if(display[i] === '.'){
-                console.log('has decimal')
                 hasDecimal = true;
               }
               if(operatorList.includes(display[i])){
-                console.log('no decimal')
                 hasDecimal = false;
               }
             }
             if (hasDecimal === false){
               setDisplay(display.concat('0'+clickedButton))
             };
-            setClickedButton('')
           }
           break
         case '=':
           if(display[display.length-1] === '%'){
-            console.log('last was %');
-            console.log('display = ', (+(display)*0.01));
             setDisplay((+(display)*0.01).toString());
           }
-          else if(operatorList.includes(display[display.length-1])){
-            setClickedButton('');
-          }
           else{
-            setDisplay(eval(display).toString());
-            setClickedButton('');
+            //Must not be an operator at the end
+            if(!operatorList.includes(display[display.length-1]) && display[display.length-1] !== '(' && bracketAmount === 0){
+              setDisplay(eval(display).toString());
+            }
           }
           break;
         default:
-          if(display ==='0' && operatorList.includes(clickedButton)){
-            setClickedButton('')
-          }
-          else if(display === '0' && clickedButton !== '.'){
-            setDisplay(clickedButton)
-            setClickedButton('')
+          if(display === '0'){
+            if(clickedButton !== '.' && !operatorList.includes(clickedButton)){
+              setDisplay(clickedButton)
+            }
           }
           else{
-            setDisplay(display.concat(clickedButton))
-            setClickedButton('')
+            //if last was bracket
+            if(display[display.length-1] === ')'){
+              console.log('last was', display[display.length-1])
+              if(operatorList.includes(clickedButton)){
+                setDisplay(display.concat(clickedButton));
+              }
+              else{
+                setDisplay(display.concat('*'+clickedButton))
+              }
+            }
+            else if(display[display.length-1] === '('){
+              if(clickedButton !== '*' && clickedButton !== '/'){
+                setDisplay(display.concat(clickedButton));
+              }
+            }
+            else{
+              setDisplay(display.concat(clickedButton));
+            }
           }
       }
     }
+    // console.log('right out, = ', display[display.length-1])
+    setClickedButton('')
+    setBracketAmount(tempBracketAmount)
   }
-
-  // if(clickedOperator){
-  // }
 }
 
 
