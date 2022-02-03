@@ -4,7 +4,12 @@ module.exports = {
     "./public/**/*.html",
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'short' : {'raw': '(max-height: 800px)'}
+        
+      }
+    },
   },
   plugins: [],
 }

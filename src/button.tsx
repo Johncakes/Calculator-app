@@ -1,135 +1,35 @@
 import React from "react"
 
-function buttonNums(
-  nums:any, 
-  setClickedButton:any,
-  ){ 
-  return(
-    <div
-      className ="flex flex-row justify-evenly text-white">
-        <button className="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2" onClick={() => setClickedButton((nums).toString())}
-        >
-          {nums}
-        </button>
-        <button className="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2" onClick={() => setClickedButton((nums+1).toString())}
-        >
-          {nums+1}
-        </button>
-        <button className="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2" onClick={() => setClickedButton((nums+2).toString())}
-        >
-          {nums+2}
-        </button>
-    </div>
-  )
-}
-export function SideFunctions(
-    props:{
-    setClickedButton:any,
-    }
-  ){
-  return(
-    <div className="flex flex-col text-white">
-      <button 
-        className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-        onClick={() => props.setClickedButton('/')}
-      >
-        ÷
-      </button>
-      <button 
-        className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-        onClick={() => props.setClickedButton('*')}
-      >
-        x
-      </button>
-      <button 
-        className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-        onClick={() => props.setClickedButton('-')}
-      >
-        -
-      </button>
-      <button 
-        className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-        onClick={() => props.setClickedButton('+')}
-      >
-        +
-      </button>
-      <button 
-        className ="rounded-full w-16 h-16 bg-green-700
-         flex items-center justify-center m-2"
-        onClick={() => props.setClickedButton('=')}
-      >
-        =
-      </button>
-    </div>
-  )
-}
-export function TopFunctions(
-    props:{
-    setClickedButton:any,
-    }
-  ){
-  return(
-    <div className ="flex justify-evenly text-white">
-      <button 
-        className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-        onClick={() => props.setClickedButton('clear')}
-      >
-        C
-      </button>
-      <button 
-        className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-        onClick={() => props.setClickedButton('ce')}
-      >
-        CE
-      </button>
-      <button 
-        className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-        onClick={() => props.setClickedButton('()')}
-      >
-        ( )
-      </button>
-    </div>
-  )
-}
-
 export function Numbers(
 props:{
-  setClickedButton:any,
+  setClickedButton:React.Dispatch<React.SetStateAction<string>>,
 }
 ) 
 {
-  let numberList = []
-  for(let i = 0; i < 9; i+= 3){
-    numberList.push(<li key ={i}>{buttonNums(i+1, props.setClickedButton)}</li>)
+  const nums:string[] = ['C','CE','()','/','9','8','7','*','6','5','4','-','3','2','1','+','+/-','0','.','='];
+  let row = [];
+  for(let i = 0; i < nums.length; i+=4){
+    let col = [];
+    for(let j = 0; j < 4; j++){
+      col.push(
+        <button key={nums[i+j]} className ="rounded-full w-full h-4/6 sm:w-14 sm:h-14 short:h-4/6 bg-neutral-700 text-white flex items-center justify-center m-2"
+        onClick={() => props.setClickedButton(nums[i+j])}>
+          {nums[i+j]}
+        </button>
+      );
+    }
+    row.push(
+      <div key={'row '+((i/4)+1)} className="flex flex-row justify-between h-1/4">
+        {col}
+      </div>
+    ); 
   }
+
+
   return(
     <>
-      <div className = "flex flex-col">
-        <ul className ="flex flex-col-reverse">
-          {numberList}
-        </ul>
-      </div>
-      <div className= "flex flex-col">
-        <div className ="flex justify-evenly text-white">
-          <button 
-            className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-            onClick={() => props.setClickedButton((-1).toString())}
-          >
-            +/-
-          </button>
-          <button 
-            className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-            onClick={() => props.setClickedButton('0')}
-          >
-            0
-          </button>
-          <button 
-            className ="rounded-full w-16 h-16 bg-neutral-700 flex items-center justify-center m-2"
-            onClick={() => props.setClickedButton('.')}
-          >
-            . 
-          </button>
-        </div>
+      <div className = "flex flex-col w-full sm:w-80 h-full">
+        {row}
       </div>
     </>
   )
