@@ -1,16 +1,12 @@
 import ButtonHolder from "@/components/buttonHolder";
 import { useState } from "react";
-import { Calc } from "@/pages/calc";
 import Display from "./Display";
 
 export default function Calculator() {
-  const [bracketAmount, setBracketAmount] = useState(0);
-  const [clickedButton, setClickedButton] = useState("");
   const [displayValue, setDisplayValue] = useState("0");
   const [refresh, setRefresh] = useState(false);
 
   const [firstCalc, setFirstCalc] = useState("");
-  const [secondCalc, setSecondCalc] = useState("");
 
   const [operator, setOperator] = useState("");
 
@@ -19,7 +15,6 @@ export default function Calculator() {
   const isOperator = (value: string) => {
     return operatorList.includes(value);
   };
-  console.log(operator);
 
   const calculate = (first: string, second: string, operator: string) => {
     let result = 0;
@@ -49,12 +44,20 @@ export default function Calculator() {
   const buttonClickHandler = (buttonValue: string) => {
     if (isOperator(buttonValue)) {
       setOperator(buttonValue);
-      setFirstCalc(displayValue);
+      if (firstCalc != "") {
+        const result = calculate(firstCalc, displayValue, operator);
+        setDisplayValue(result);
+        setFirstCalc(result);
+      } else {
+        setFirstCalc(displayValue);
+      }
       setRefresh(true);
     } else {
       switch (buttonValue) {
         case "=":
           setDisplayValue(calculate(firstCalc, displayValue, operator));
+          setRefresh(true);
+          setFirstCalc("");
           break;
         case "C":
           setDisplayValue("0");
