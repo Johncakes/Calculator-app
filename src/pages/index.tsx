@@ -7,7 +7,9 @@ export default function App() {
     <>
       <Header />
       <div className="flex justify-center items-center w-full h-screen bg-gray-200">
-        <Calculator />
+        <div className="flex flex-col max-w-screen-md h-full justify-center">
+          <Calculator />
+        </div>
       </div>
     </>
   );

@@ -1,31 +1,98 @@
-import Button from "@/components/button";
+import ButtonHolder from "@/components/buttonHolder";
 import { useState } from "react";
 import { Calc } from "@/pages/calc";
+import Display from "./Display";
 
 export default function Calculator() {
   const [bracketAmount, setBracketAmount] = useState(0);
-  const [display, setDisplay] = useState("0");
   const [clickedButton, setClickedButton] = useState("");
+  const [displayValue, setDisplayValue] = useState("0");
+  const [refresh, setRefresh] = useState(false);
 
-  Calc(
-    bracketAmount,
-    clickedButton,
-    display,
-    setBracketAmount,
-    setDisplay,
-    setClickedButton
-  );
+  const [firstCalc, setFirstCalc] = useState("");
+  const [secondCalc, setSecondCalc] = useState("");
+
+  const [operator, setOperator] = useState("");
+
+  const operatorList = ["+", "−", "×", "÷", "%"];
+
+  const isOperator = (value: string) => {
+    return operatorList.includes(value);
+  };
+  console.log(operator);
+
+  const calculate = (first: string, second: string, operator: string) => {
+    let result = 0;
+    switch (operator) {
+      case "+":
+        result = parseFloat(first) + parseFloat(second);
+        break;
+      case "−":
+        result = parseFloat(first) - parseFloat(second);
+        break;
+      case "×":
+        result = parseFloat(first) * parseFloat(second);
+        break;
+      case "÷":
+        if (parseFloat(second) === 0) {
+          return "Error";
+        }
+        result = parseFloat(first) / parseFloat(second);
+        break;
+      case "%":
+        result = (parseFloat(first) / 100) * parseFloat(second);
+        break;
+    }
+    return result.toString();
+  };
+
+  const buttonClickHandler = (buttonValue: string) => {
+    if (isOperator(buttonValue)) {
+      setOperator(buttonValue);
+      setFirstCalc(displayValue);
+      setRefresh(true);
+    } else {
+      switch (buttonValue) {
+        case "=":
+          setDisplayValue(calculate(firstCalc, displayValue, operator));
+          break;
+        case "C":
+          setDisplayValue("0");
+          break;
+        case "CE":
+          if (displayValue.length === 1) {
+            setDisplayValue("0");
+          } else {
+            setDisplayValue(displayValue.slice(0, -1));
+          }
+          break;
+        case ".":
+          if (displayValue.includes(".")) {
+            return;
+          }
+          setDisplayValue(displayValue + ".");
+          break;
+        case "+/-":
+          setDisplayValue((prev) => (parseFloat(prev) * -1).toString());
+          break;
+        default:
+          if (displayValue === "0" || refresh) {
+            setRefresh(false);
+            setDisplayValue(buttonValue);
+          } else {
+            setDisplayValue((prev) => prev + buttonValue);
+          }
+      }
+    }
+  };
+
   return (
-    <div className="flex flex-col h-3/5 w-2/3 rounded-lg bg-black">
-      {/* <div className="flex flex-col-reverse tight:w-screen w-full h-1/4 rounded-t-sm bg-slate-100">
-        <div className="flex flex-row-reverse break-words px-4 text-4xl w-screen sm:w-80">
-          {display}
-        </div>
-      </div>
+    <div className="flex flex-col rounded-lg p-2 bg-black space-y-2">
+      <Display displayValue={displayValue} />
 
-      <div className="flex justify-center items-center w-full h-3/4 p-3 bg-zinc-900">
-        <Button setClickedButton={setClickedButton} />
-      </div> */}
+      <div className="flex justify-center items-center w-full h-full bg-black">
+        <ButtonHolder setDisplayValue={buttonClickHandler} />
+      </div>
     </div>
   );
 }
