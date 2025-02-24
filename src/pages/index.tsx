@@ -4,13 +4,13 @@ import Header from "@/components/header";
 
 export default function App() {
   return (
-    <>
+    <div className="flex flex-col h-dvh bg-gray-200">
       <Header />
-      <div className="flex justify-center items-center w-full h-screen bg-gray-200">
-        <div className="flex flex-col max-w-screen-md h-full justify-center">
+      <main className="flex-1 flex justify-center h-full items-center">
+        <div className="w-full h-full sm:max-w-md sm:h-3/4">
           <Calculator />
         </div>
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
