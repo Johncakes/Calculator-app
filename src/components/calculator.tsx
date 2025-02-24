@@ -1,12 +1,14 @@
 import ButtonHolder from "@/components/buttonHolder";
 import { useState } from "react";
 import Display from "./Display";
+import { parse } from "path";
 
 export default function Calculator() {
   const [displayValue, setDisplayValue] = useState("0");
   const [refresh, setRefresh] = useState(false);
 
   const [firstCalc, setFirstCalc] = useState("");
+  const [secondNumClicked, setSecondNumClicked] = useState(false);
 
   const [operator, setOperator] = useState("");
 
@@ -37,17 +39,20 @@ export default function Calculator() {
       case "%":
         result = (parseFloat(first) / 100) * parseFloat(second);
         break;
+      default:
+        result = parseFloat(second);
     }
-    return result.toString();
+    return result.toFixed(5);
   };
 
   const buttonClickHandler = (buttonValue: string) => {
     if (isOperator(buttonValue)) {
       setOperator(buttonValue);
-      if (firstCalc != "") {
+      if (firstCalc != "" && secondNumClicked) {
         const result = calculate(firstCalc, displayValue, operator);
         setDisplayValue(result);
         setFirstCalc(result);
+        setSecondNumClicked(false);
       } else {
         setFirstCalc(displayValue);
       }
@@ -58,9 +63,12 @@ export default function Calculator() {
           setDisplayValue(calculate(firstCalc, displayValue, operator));
           setRefresh(true);
           setFirstCalc("");
+          setOperator("");
           break;
         case "C":
           setDisplayValue("0");
+          setOperator("");
+          setFirstCalc("");
           break;
         case "CE":
           if (displayValue.length === 1) {
@@ -79,6 +87,9 @@ export default function Calculator() {
           setDisplayValue((prev) => (parseFloat(prev) * -1).toString());
           break;
         default:
+          if (firstCalc != "" && !secondNumClicked) {
+            setSecondNumClicked(true);
+          }
           if (displayValue === "0" || refresh) {
             setRefresh(false);
             setDisplayValue(buttonValue);
@@ -90,8 +101,12 @@ export default function Calculator() {
   };
 
   return (
-    <div className="flex flex-col rounded-lg p-2 bg-black space-y-2">
-      <Display displayValue={displayValue} />
+    <div className="flex flex-col rounded-none sm:rounded-lg p-2 bg-black space-y-2 w-full h-full">
+      <Display
+        firstValue={firstCalc}
+        operator={operator}
+        displayValue={displayValue}
+      />
 
       <div className="flex justify-center items-center w-full h-full bg-black">
         <ButtonHolder setDisplayValue={buttonClickHandler} />
